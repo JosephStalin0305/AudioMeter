@@ -1,3 +1,4 @@
+volatile uint16_t adcCounter = 0;
 volatile uint16_t adcValue = 0;
 volatile bool adcReady = false;
 
@@ -45,7 +46,10 @@ void loop() {
 }
 
 ISR(ADC_vect) {
-    adcValue = ADC;
-    adcReady = true;
+    if (++adcCounter == 1500) {
+        adcCounter = 0;
+        adcValue = ADC;
+        adcReady = true;
+    }
     ADCSRA |= (1 << ADSC);
 }
